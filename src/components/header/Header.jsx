@@ -9,6 +9,9 @@ import "./style.scss";
 import ContentWrapper from "../contentWrapper/ContentWrapper";
 import logo from "../../assets/NEXTMOVIE.svg";
 import { fetchDataFromApi } from "../../utils/api";
+import Img from "../lazyLoadImage/Img";
+import noPoster from "../../assets/no-results.png";
+import useDebounce from "../../hooks/useDebounce";
 
 const Header = () => {
   const [show, setShow] = useState("top");
@@ -19,13 +22,20 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [autosuggestion, setAutosuggestion] = useState([]);
+  const debounce = useDebounce(
+    () =>
+      fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
+        setAutosuggestion(res?.results);
+      }),
+    700
+  );
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
 
   const controlNavbar = () => {
     // console.log(window.scrollY)
-    if (window.scrollY > 200) {
+    if (window.scrollY > 300) {
       if (window.scrollY > lastScrollY && !mobileMenu) {
         setShow("hide");
       } else {
@@ -47,16 +57,20 @@ const Header = () => {
   const searchQueryHandler = (event) => {
     if (event.key === "Enter" && query.length > 0) {
       navigate(`/search/${query}`);
-      setTimeout(() => {
-        setShowSearch(false);
-      }, 1000);
+      // setTimeout(() => {
+      //   setShowSearch(false);
+      // }, 1000);
     }
-    fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
-      setAutosuggestion(res?.results || []);
-      
-    });
-    
+    // fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
+    //   setAutosuggestion(res?.results || []);
+    // });
   };
+  //useDebounce hook implementation
+  useEffect(() => {
+    if (query.length > 0) {
+      debounce();
+    }
+  }, [query]);
 
   const openSearch = () => {
     setMobileMenu(false);
@@ -137,16 +151,29 @@ const Header = () => {
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyUp={searchQueryHandler}
               />
-              {autosuggestion.length > 0 && (
+              {query.length > 0 && (
                 <div className="auto">
                   {autosuggestion?.map((e) => (
                     <ul key={e.id}>
                       <li
                         onClick={() => {
                           navigate(`/search/${e.name || e.title}`);
+                          setShowSearch(false);
+                          setAutosuggestion([]);
                         }}
                       >
                         {e.name || e.title}
+                        {e.backdrop_path ? (
+                          <Img
+                            className="searchImg"
+                            src={
+                              "http://image.tmdb.org/t/p/original" +
+                              e.backdrop_path
+                            }
+                          />
+                        ) : (
+                          <Img className="searchImg" src={noPoster} />
+                        )}
                       </li>
                     </ul>
                   ))}
@@ -155,6 +182,7 @@ const Header = () => {
               <VscChromeClose
                 onClick={() => {
                   setShowSearch(false);
+                  setAutosuggestion([]);
                 }}
               />
             </div>

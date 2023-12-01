@@ -1,6 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700;800&display=swap');
+@import "./mixins.scss";
 :root {
-  font-family: 'Ubuntu Mono', monospace;
+  font-family: 'Raleway', sans-serif;
   font-size: 16px;
   line-height: 1;
   font-weight: 500;
@@ -43,17 +44,22 @@ body {
   width: 7px;               /* width of the entire scrollbar */
 }
 
-::-webkit-scrollbar-track {
-  // background: var(--black-lighter);
-  background: rgb(255,255,255);
-  background: linear-gradient(160deg, rgba(255,255,255,1) 0%, rgba(244,244,244,0) 0%);
-  border-radius: 0 20px 20px 0;        /* color of the tracking area */
+
+@include md{
+  ::-webkit-scrollbar-track {
+    // background: var(--black-lighter);
+    background: rgb(255,255,255);
+    background: linear-gradient(160deg, rgba(255,255,255,1) 0%, rgba(244,244,244,0) 0%);
+    border-radius: 0 20px 20px 0;        /* color of the tracking area */
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--gradient);    /* color of the scroll thumb */
-  border-radius: 20px;       /* roundness of the scroll thumb */
-  // border: 3px solid orange;  /* creates padding around scroll thumb */
+@include md {
+  ::-webkit-scrollbar-thumb {
+    background: var(--gradient);    /* color of the scroll thumb */
+    border-radius: 20px;       /* roundness of the scroll thumb */
+    // border: 3px solid orange;  /* creates padding around scroll thumb */
+  }
 }
 
 .skeleton {

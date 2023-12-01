@@ -91,6 +91,7 @@
         .searchInput{
             display: flex;
             // border: 2px solid white;
+            // justify-content: center;
             align-items: center;
             width: 100%;
             input {
@@ -131,6 +132,28 @@
             button:hover{
                 color: var(--black);
             }
+            .closeBtn{
+                position: absolute;
+                // border: 2px solid blue;
+                // margin-left: 60rem;
+                margin-left: 15rem;
+                margin-top: 4px;
+                flex-shrink: 0;
+                font-size: 20px;
+                @include md {
+                    margin-left: 60rem;
+                }
+                
+                svg {
+                    // position: relative;
+                    font-size: 20px;
+                    cursor: pointer;
+                    fill: black;
+                    // padding: 1rem 1rem 1rem 1rem;
+                    
+                }
+            }
+            
         
         }
         .auto{

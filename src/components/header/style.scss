@@ -147,36 +147,52 @@
                 position: absolute;
                 height: auto;
                 width: calc(100% - 100px);
-                background: white;
-                margin-top: 49rem;
-                margin-left: -1rem;
-                border-radius: 1.2rem;
-                z-index: 1;
+                background: var(--white);
+                margin-top: 29rem;
+                min-height: 0;
+                max-height: 400px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border-radius: 0.7rem 4px 4px 0.7rem;
+                z-index: 9;
                 font-size: 14px;
                 
                 @include md {
-                    margin-top: 50rem;
-                    margin-left: 0.2rem;
+                    margin-top: 29rem;
+                    margin-left: 1px;
                     font-size: 20px;
-                    width: calc(100% - 600px);
-                    
+                    width: calc(100% - 400px);
+                    // min-height: 0;
+                    // max-height: 400px;
+                    // overflow-x: hidden;
+                    // overflow-y: auto;
                 }
                 
                 li{
-                    list-style: none;
-                    text-decoration: none;
-                    color: var(--black);
+                    width: inherit;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    color: var(--black3);
                     text-align: left;
-                    margin: 2px;
-                    padding: 7px 0px 7px 20px ;
+                    // margin: 5px;
+                    padding: 4px 10px 4px 13px ;
                     transition: all 0.2s ease-in-out;
                     font-weight: 500;
-                    
-                }
+                    @include md {
+                        padding: 8px 20px 8px 28px ;
+                    }
+                } 
                 li:hover{
-                    border-radius: 1rem;
+                    border-radius: 0.7rem 4px 4px 0.7rem;
                     cursor: pointer;
                     background-color: #c1d1e3;
+                }
+                .searchImg {
+                    width: 30px;
+                    height: 40px;
+                    border-radius: 0.2rem;
+                    object-fit: cover;
                 }
             }
         }

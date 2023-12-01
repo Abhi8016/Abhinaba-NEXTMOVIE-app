@@ -6,8 +6,9 @@ import loadable from "@loadable/component";
 import { useSelector, useDispatch } from "react-redux";
 import { getApiConfiguration, getGenres } from "./store/homeSlice";
 
-import Header from './components/header/Header'
+import Header from "./components/header/Header";
 import Home from "./pages/home/Home";
+
 // import Footer from "./components/footer/Footer";
 // import Details from "./pages/details/Details";
 // import SearchResult from "./pages/searchResult/SearchResult";
@@ -19,7 +20,9 @@ import Home from "./pages/home/Home";
 // const Home = loadable(() => import("./pages/home/Home"));
 const Footer = loadable(() => import("./components/footer/Footer"));
 const Details = loadable(() => import("./pages/details/Details"));
-const SearchResult = loadable(() => import("./pages/searchResult/SearchResult"));
+const SearchResult = loadable(() =>
+  import("./pages/searchResult/SearchResult")
+);
 const Explore = loadable(() => import("./pages/explore/Explore"));
 const PageNotFound = loadable(() => import("./pages/404/PageNotFound"));
 const WatchList = loadable(() => import("./pages/watchList/WatchList"));

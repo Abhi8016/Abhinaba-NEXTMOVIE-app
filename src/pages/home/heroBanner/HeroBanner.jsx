@@ -9,6 +9,8 @@ import useFetch from "../../../hooks/useFetch";
 import Img from "../../../components/lazyLoadImage/Img";
 import ContentWrapper from "../../../components/contentWrapper/ContentWrapper";
 import { fetchDataFromApi } from "../../../utils/api";
+import { VscChromeClose } from "react-icons/vsc";
+import useDebounce from "../../../hooks/useDebounce";
 
 const HeroBanner = () => {
   const [background, setBackground] = useState("");
@@ -19,6 +21,13 @@ const HeroBanner = () => {
   const { url } = useSelector((state) => state.home);
   const { data, loading } = useFetch("/movie/popular");
   const [autosuggestion, setAutosuggestion] = useState([]);
+  const debounce = useDebounce(
+    () =>
+      fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
+        setAutosuggestion(res?.results);
+      }),
+    700
+  );
 
   const gotoImgDetailes = () => {
     navigate(`/${mediaType}/${id}`);
@@ -48,25 +57,34 @@ const HeroBanner = () => {
   //   }
   // }, [query]);
 
+  //autosuggestion function
   const searchQueryHandler = (event) => {
     if (event.key === "Enter" && query.length > 0) {
       navigate(`/search/${query}`);
     }
 
-    fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
-      setAutosuggestion(res?.results);
-    });
+    // fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
+    //   setAutosuggestion(res?.results);
+    // });
   };
 
+  //useDebounce hook implementation
+  useEffect(() => {
+   if(query.length >0) {
+    debounce();
+   }
+  }, [query]);
+
+  //search button function
   const searchButton = () => {
     if (query.length > 0) {
       navigate(`/search/${query}`);
     }
   };
 
-  autosuggestion?.map((e) => {
-    console.log(e.title || e.name);
-  });
+  // autosuggestion?.map((e) => {
+  //   console.log(e.title || e.name);
+  // });
 
   return (
     <div className="heroBanner">
@@ -88,10 +106,21 @@ const HeroBanner = () => {
               placeholder="Search for movies or tv shows......."
               onChange={(e) => setQuery(e.target.value)}
               onKeyUp={searchQueryHandler}
+              value={query}
             />
+            <div className="closeBtn">
+              {query && (
+                <VscChromeClose
+                  onClick={(e) => {
+                    setAutosuggestion([]);
+                    setQuery("");
+                  }}
+                />
+              )}
+            </div>
             <button onClick={() => searchButton()}>Search</button>
           </div>
-          {query.length > 2 && (
+          {query.length > 0 && (
             <div className="auto">
               {autosuggestion?.map((e) => (
                 <ul key={e.id}>

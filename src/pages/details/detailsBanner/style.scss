@@ -103,6 +103,7 @@
             .circleRating {
                 max-width: 50px;
                 // background-color: var(--black2);
+                margin-right: 20px;
                 padding-right: 5px;
                 @include md {
                     max-width: 90px;
@@ -179,6 +180,24 @@
                 .watchMovie a:hover{
                     cursor: pointer;
                     color: var(--blue);
+                }
+                .btn{
+                    font-size: 14px;
+                    background: var(--gradient);
+                    border-radius: 5px;
+                    padding: 6px;
+                    color: var(--black);
+                    text-align: center;
+                    font-weight: 600;
+                    transition: all 0.4s ease-in-out;
+                    @include md {
+                        font-size: 18px;
+                    }
+                }
+                .btn:hover{
+                    border-radius: 18px;
+                    color: black;
+                    cursor: pointer;
                 }
             }
 

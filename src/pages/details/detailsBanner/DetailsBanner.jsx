@@ -12,8 +12,9 @@ import Img from "../../../components/lazyLoadImage/Img.jsx";
 import PosterFallback from "../../../assets/no-poster.png";
 import { Playbtn } from "../Playbtn.jsx";
 import VideoPopup from "../../../components/videoPopup/VideoPopup.jsx";
-import Heart from "react-animated-heart";
 import { add, remove } from "../../../store/watchListSlice.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DetailsBanner = ({ video, crew }) => {
   const [show, setShow] = useState();
@@ -27,28 +28,23 @@ const DetailsBanner = ({ video, crew }) => {
 
   const myList = useSelector((state) => state.watchList);
 
-  const statusCheck = () => {
-    myList.forEach((e) => {
-      if (e.id == data.id) {
-        return true;
-      }
-    });
-    return false;
-  };
-
-  const [isClick, setIsClick] = useState(false);
   const _genres = data?.genres?.map((g) => g.id);
+
+  let currentObj = {};
+  myList.forEach((e) => {
+    if (e.id === data?.id) {
+      currentObj = { ...e };
+    }
+  });
+
+  const [status, setStatus] = useState(currentObj?.flag);
+  console.log(currentObj?.flag);
+  // console.log(currentObj.hasOwnProperty("flag"))
 
   const director = crew?.filter((f) => f.job === "Director");
   const writer = crew?.filter(
     (f) => f.job === "Screenplay" || f.job === "Story" || f.job === "Writer"
   );
-
-  useEffect(() => {
-    if (myList && data) {
-      setIsClick(statusCheck());
-    }
-  }, [myList, data]);
 
   const toHoursAndMinutes = (totalMinutes) => {
     const hours = Math.floor(totalMinutes / 60);
@@ -57,14 +53,19 @@ const DetailsBanner = ({ video, crew }) => {
   };
 
   const handleFav = () => {
-    data && dispatch(add({ ...data, flag: true }));
-    setIsClick(true);
-    myList.forEach((e) => {
-      if (e.id === data?.id) {
-        dispatch(remove(data?.id));
-        setIsClick(false);
-      }
-    });
+    if (currentObj.id === data?.id) {
+      dispatch(remove(data?.id));
+      toast.warning(
+        `you have removed ${data?.name || data?.title} from Watch List`
+      );
+      setStatus(false);
+    } else {
+      data && dispatch(add({ ...data, flag: true }));
+      toast.success(
+        `you have added ${data?.name || data?.title} to Watch List`
+      );
+      setStatus(true);
+    }
   };
 
   return (
@@ -127,9 +128,23 @@ const DetailsBanner = ({ video, crew }) => {
                           )}
                         </a>
                       </div>
-                      <div className="heart">
-                        <Heart isClick={isClick}     />
+
+                      {/* <Heart isClick={isClick}     /> */}
+                      <div className="btn" onClick={handleFav}>
+                        Watch List
                       </div>
+                      <ToastContainer
+                        position="top-right"
+                        autoClose={2000}
+                        hideProgressBar={false}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss={false}
+                        draggable
+                        pauseOnHover={false}
+                        theme="dark"
+                      />
                     </div>
                     <div className="overview">
                       <div className="heading">Overview</div>
