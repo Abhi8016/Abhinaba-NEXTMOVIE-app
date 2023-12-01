@@ -25,8 +25,7 @@ const HeroBanner = () => {
     () =>
       fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
         setAutosuggestion(res?.results);
-      }),
-    700
+      })
   );
 
   const gotoImgDetailes = () => {
