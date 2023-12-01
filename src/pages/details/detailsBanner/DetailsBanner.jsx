@@ -38,7 +38,7 @@ const DetailsBanner = ({ video, crew }) => {
   });
 
   const [status, setStatus] = useState(currentObj?.flag);
-  console.log(currentObj?.flag);
+  // console.log(currentObj?.flag);
   // console.log(currentObj.hasOwnProperty("flag"))
 
   const director = crew?.filter((f) => f.job === "Director");

@@ -89,12 +89,14 @@
             }
         }
         .searchInput{
+            
             display: flex;
             // border: 2px solid white;
             // justify-content: center;
             align-items: center;
             width: 100%;
             input {
+                display: none;
                 width: calc(100% - 100px);
                 // width: 100%; 
                 height: 50px;
@@ -105,6 +107,7 @@
                 padding: 0 15px;
                 font-size: 14px;
                 @include md {
+                    display: inline;
                     width: calc(100% - 150px);
                     height: 60px;
                     font-size: 20px;
@@ -112,6 +115,7 @@
                 }
             }
             button {
+                display: none;
                 width: 100px;
                 height: 50px;
                 background: var(--gradient);
@@ -124,6 +128,7 @@
                 cursor: pointer;
                 transition: all 0.2s;
                 @include md {
+                    display: inline;
                     width: 150px;
                     height: 60px;
                     font-size: 18px;
