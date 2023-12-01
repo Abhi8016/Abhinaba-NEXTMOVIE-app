@@ -10,7 +10,7 @@ import Header from "./components/header/Header";
 import Home from "./pages/home/Home";
 
 // import Footer from "./components/footer/Footer";
-// import Details from "./pages/details/Details";
+import Details from "./pages/details/Details";
 // import SearchResult from "./pages/searchResult/SearchResult";
 // import Explore from "./pages/explore/Explore";
 // import PageNotFound from "./pages/404/PageNotFound";
@@ -19,7 +19,7 @@ import Home from "./pages/home/Home";
 // const Header = loadable(() => import("./components/header/Header"));
 // const Home = loadable(() => import("./pages/home/Home"));
 const Footer = loadable(() => import("./components/footer/Footer"));
-const Details = loadable(() => import("./pages/details/Details"));
+// const Details = loadable(() => import("./pages/details/Details"));
 const SearchResult = loadable(() =>
   import("./pages/searchResult/SearchResult")
 );
