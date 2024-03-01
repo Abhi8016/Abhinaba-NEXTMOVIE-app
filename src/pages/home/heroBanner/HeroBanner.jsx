@@ -18,14 +18,13 @@ const HeroBanner = () => {
   const [mediaType, setMediaType] = useState("");
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
-  const { url } = useSelector((state) => state.home);
+  // const { url } = useSelector((state) => state.home);
   const { data, loading } = useFetch("/movie/popular");
   const [autosuggestion, setAutosuggestion] = useState([]);
-  const debounce = useDebounce(
-    () =>
-      fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
-        setAutosuggestion(res?.results);
-      })
+  const debounce = useDebounce(() =>
+    fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
+      setAutosuggestion(res?.results);
+    })
   );
 
   const gotoImgDetailes = () => {
@@ -69,9 +68,9 @@ const HeroBanner = () => {
 
   //useDebounce hook implementation
   useEffect(() => {
-   if(query.length >0) {
-    debounce();
-   }
+    if (query.length > 0) {
+      debounce();
+    }
   }, [query]);
 
   //search button function

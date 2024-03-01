@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const myList = JSON.parse(localStorage.getItem("watchList"));
 const watchListSlice = createSlice({
   name: "watchList",
-  initialState: [...myList || ""],
+  initialState: [...(myList || "")],
   reducers: {
     add: (state, action) => {
       state?.push(action.payload);

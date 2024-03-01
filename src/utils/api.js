@@ -19,6 +19,6 @@ export const fetchDataFromApi = async (url, params) => {
         return err;
     }
 }
-document.addEventListener('contextmenu', event => {
-    event.preventDefault();
-});
+// document.addEventListener('contextmenu', event => {
+//     event.preventDefault();
+// });

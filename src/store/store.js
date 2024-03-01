@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import homeSlice from "./homeSlice";
 import watchListSlice from "./watchListSlice";
 
