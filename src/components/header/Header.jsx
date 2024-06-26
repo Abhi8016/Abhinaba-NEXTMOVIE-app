@@ -22,12 +22,14 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [autosuggestion, setAutosuggestion] = useState([]);
+
   const debounce = useDebounce(
     () =>
       fetchDataFromApi(`/search/multi?query=${query}&page=1`).then((res) => {
         setAutosuggestion(res?.results);
       })
   );
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location]);
