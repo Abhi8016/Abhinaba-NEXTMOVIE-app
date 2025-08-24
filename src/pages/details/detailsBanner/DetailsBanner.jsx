@@ -115,7 +115,7 @@ const DetailsBanner = ({ video, crew }) => {
                         <a
                           target="_blank"
                           href={
-                            "https://vidsrc.in/embed/" +
+                            "https://vidlink.pro/" +
                             mediaType +
                             "/" +
                             data.id
