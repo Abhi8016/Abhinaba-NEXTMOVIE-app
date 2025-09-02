@@ -196,159 +196,6 @@
         }
       }
 
-//////////////////////////////////      /* ---------- TV-only controls (clean compact) ---------- */
-    //   .detailsBanner {
-        // .right {
-          .tv-controls {
-            margin-top: 16px;
-            margin-bottom: 16px;
-            position: relative;
-            z-index: 3;
-
-            /* 12-col grid: Season(3) Episode(5) Play(2) with gaps */
-            .tv-controls-row {
-              display: grid;
-              grid-template-columns: repeat(12, 1fr);
-              gap: 12px;
-              align-items: end;
-
-              @include md {
-                gap: 16px;
-              }
-            }
-
-            .tv-select {
-              grid-column: span 12;
-
-              @include md {
-                grid-column: span 3; /* Season default */
-              }
-
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-
-              label {
-                margin-left: 5px;
-                font-size: 18px;
-                font-weight: 700;
-                color: rgba(255, 255, 255, 0.8);
-              }
-
-              .select-wrap {
-                position: relative;
-                width: 100%;
-              }
-
-              select {
-                width: 100%;
-                height: 44px;
-                padding: 0 40px 0 12px; /* room for chevron */
-                border-radius: 8px;
-                border: 1px solid rgba(255, 255, 255, 0.16);
-                background-color: #132235; /* dark, no blur */
-                color: rgba(255, 255, 255, 0.8);
-                font-size: 14px;
-                font-weight: 600;
-                outline: none;
-                appearance: none;
-                -webkit-appearance: none;
-                transition: border-color 0.15s ease, box-shadow 0.15s ease,
-                  background-color 0.15s ease;
-
-                &:hover {
-                  border-color: rgba(255, 255, 255, 0.28);
-                }
-                &:focus {
-                  border-color: var(--blue);
-                  box-shadow: 0 0 0 2px rgba(0, 136, 255, 0.35);
-                  background-color: #172a42;
-                }
-                &:disabled {
-                  opacity: 0.6;
-                  cursor: not-allowed;
-                }
-
-                option {
-                  background: #0e1a2a;
-                  color: #e8f0ff;
-                  padding: 5px;
-                }
-              }
-
-              /* Chevron icon */
-              .select-wrap::after {
-                content: "";
-                position: absolute;
-                right: 12px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 16px;
-                height: 16px;
-                pointer-events: none;
-                opacity: 0.9;
-                background-image: url("data:image/svg+xml;utf8,<svg width='16' height='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none'><path d='M6 9l6 6 6-6' stroke='%23E8F0FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-                background-size: 16px 16px;
-                background-repeat: no-repeat;
-              }
-            }
-
-            /* Episode gets wider so long titles fit */
-            .tv-select.episode {
-              @include md {
-                grid-column: span 5;
-              }
-            }
-
-            .tv-play-btn {
-              grid-column: span 12;
-
-              @include md {
-                grid-column: span 2;
-              }
-
-              height: 44px;
-              padding: 0 14px;
-              border-radius: 8px;
-              border: none;
-              cursor: pointer;
-              background: #0e62ab; /* cleaner blue */
-              color: #fff;
-              font-weight: 700;
-              font-size: 20px;
-              transition: transform 0.05s ease, opacity 0.2s ease,
-                background 0.2s ease;
-
-              &:hover {
-                background: #2a7dff;
-              }
-              &:active {
-                transform: translateY(1px);
-              }
-              &:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-              }
-            }
-
-            .tv-player {
-              margin-top: 18px;
-              position: relative;
-              z-index: 1;
-
-              iframe {
-                width: 100%;
-                aspect-ratio: 16 / 9;
-                border: none;
-                border-radius: 12px;
-                background: #000;
-              }
-            }
-          }
-        // }
-    //   }
-//////////////////////      /* ---------- End TV-only controls ---------- */
-
       .info {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         padding: 15px 0;
@@ -371,6 +218,157 @@
     }
   }
 
+  //////////////////////////////////      /* ---------- TV-only controls (clean compact) ---------- */
+  //   .detailsBanner {
+  // .right {
+  .tv-controls {
+    margin-top: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 3;
+
+    /* 12-col grid: Season(3) Episode(5) Play(2) with gaps */
+    .tv-controls-row {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 12px;
+      align-items: end;
+
+      @include md {
+        gap: 16px;
+      }
+    }
+
+    .tv-select {
+      grid-column: span 12;
+
+      @include md {
+        grid-column: span 3; /* Season default */
+      }
+
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      label {
+        margin-left: 5px;
+        font-size: 18px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .select-wrap {
+        position: relative;
+        width: 100%;
+      }
+
+      select {
+        width: 100%;
+        height: 44px;
+        padding: 0 40px 0 12px; /* room for chevron */
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        background-color: #132235; /* dark, no blur */
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+        font-weight: 600;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease,
+          background-color 0.15s ease;
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.28);
+        }
+        &:focus {
+          border-color: var(--blue);
+          box-shadow: 0 0 0 2px rgba(0, 136, 255, 0.35);
+          background-color: #172a42;
+        }
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        option {
+          background: #0e1a2a;
+          color: #e8f0ff;
+          padding: 5px;
+        }
+      }
+
+      /* Chevron icon */
+      .select-wrap::after {
+        content: "";
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        pointer-events: none;
+        opacity: 0.9;
+        background-image: url("data:image/svg+xml;utf8,<svg width='16' height='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none'><path d='M6 9l6 6 6-6' stroke='%23E8F0FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+        background-size: 16px 16px;
+        background-repeat: no-repeat;
+      }
+    }
+
+    /* Episode gets wider so long titles fit */
+    .tv-select.episode {
+      @include md {
+        grid-column: span 5;
+      }
+    }
+
+    .tv-play-btn {
+      grid-column: span 12;
+
+      @include md {
+        grid-column: span 2;
+      }
+
+      height: 44px;
+      padding: 0 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      background: #0e62ab; /* cleaner blue */
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      transition: transform 0.05s ease, opacity 0.2s ease, background 0.2s ease;
+
+      &:hover {
+        background: #2a7dff;
+      }
+      &:active {
+        transform: translateY(1px);
+      }
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+
+    .tv-player {
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+
+      iframe {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        border: none;
+        border-radius: 12px;
+        background: #000;
+      }
+    }
+  }
+  // }
+  //   }
+  //////////////////////      /* ---------- End TV-only controls ---------- */
   .detailsBannerSkeleton {
     display: flex;
     position: relative;

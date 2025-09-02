@@ -212,203 +212,13 @@ const DetailsBanner = ({ video, crew }) => {
                       />
                     </div>
 
-                    {/* TV-only controls */}
-                    {isTV && seasons.length > 0 && (
-                      // <div className="tv-controls">
-                      //   <div className="tv-controls-row">
-                      //     {/* <div className="tv-select">
-                      //       <label htmlFor="season-select">Season</label>
-                      //       <select
-                      //         id="season-select"
-                      //         value={season ?? ""}
-                      //         onChange={(e) => {
-                      //           setSeason(Number(e.target.value));
-                      //           setEpisode(1);
-                      //           setPlayTv(false);
-                      //         }}
-                      //       >
-                      //         {seasons.map((s) => (
-                      //           <option key={s.id || s.season_number} value={s.season_number}>
-                      //             {`S${s.season_number} (${s.episode_count} eps)${
-                      //               s.name ? ` — ${s.name}` : ""
-                      //             }`}
-                      //           </option>
-                      //         ))}
-                      //       </select>
-                      //     </div>
-
-                      //     <div className="tv-select">
-                      //       <label htmlFor="episode-select">Episode</label>
-                      //       <select
-                      //         id="episode-select"
-                      //         value={episode ?? ""}
-                      //         onChange={(e) => {
-                      //           setEpisode(Number(e.target.value));
-                      //           setPlayTv(false);
-                      //         }}
-                      //         disabled={!episodeList.length}
-                      //       >
-                      //         {episodeList.map((ep) => (
-                      //           <option key={ep.episode_number} value={ep.episode_number}>
-                      //             {ep.label}
-                      //           </option>
-                      //         ))}
-                      //       </select>
-                      //     </div> */}
-
-                      //     <div className="tv-select">
-                      //       <label htmlFor="season-select">Season</label>
-                      //       <div className="select-wrap">
-                      //         <select
-                      //           id="season-select"
-                      //           value={season ?? ""}
-                      //           onChange={(e) => {
-                      //             setSeason(Number(e.target.value));
-                      //             setEpisode(1);
-                      //             setPlayTv(false);
-                      //           }}
-                      //         >
-                      //           {seasons.map((s) => (
-                      //             <option
-                      //               key={s.id || s.season_number}
-                      //               value={s.season_number}
-                      //             >
-                      //               {`S${s.season_number} (${
-                      //                 s.episode_count
-                      //               } eps)${s.name ? ` — ${s.name}` : ""}`}
-                      //             </option>
-                      //           ))}
-                      //         </select>
-                      //       </div>
-                      //     </div>
-
-                      //     <div className="tv-select">
-                      //       <label htmlFor="episode-select">Episode</label>
-                      //       <div className="select-wrap">
-                      //         <select
-                      //           id="episode-select"
-                      //           value={episode ?? ""}
-                      //           onChange={(e) => {
-                      //             setEpisode(Number(e.target.value));
-                      //             setPlayTv(false);
-                      //           }}
-                      //           disabled={!episodeList.length}
-                      //         >
-                      //           {episodeList.map((ep) => (
-                      //             <option
-                      //               key={ep.episode_number}
-                      //               value={ep.episode_number}
-                      //             >
-                      //               {ep.label}
-                      //             </option>
-                      //           ))}
-                      //         </select>
-                      //       </div>
-                      //     </div>
-
-                      //     <button
-                      //       className="tv-play-btn"
-                      //       onClick={() => setPlayTv(true)}
-                      //       disabled={!season || !episode}
-                      //       title={tvEmbedUrl || ""}
-                      //     >
-                      //       Play Episode
-                      //     </button>
-                      //   </div>
-
-                      //   {playTv && tvEmbedUrl && (
-                      //     <div className="tv-player">
-                      //       <iframe
-                      //         src={tvEmbedUrl}
-                      //         title={`TV Player S${season}E${episode}`}
-                      //         allowFullScreen
-                      //         loading="lazy"
-                      //         referrerPolicy="no-referrer"
-                      //       />
-                      //     </div>
-                      //   )}
-                      // </div>
-
-                      <div className="tv-controls">
-                        <div className="tv-controls-row">
-                          <div className="tv-select">
-                            <label htmlFor="season-select">Season</label>
-                            <div className="select-wrap">
-                              <select
-                                id="season-select"
-                                value={season ?? ""}
-                                onChange={(e) => {
-                                  setSeason(Number(e.target.value));
-                                  setEpisode(1);
-                                  setPlayTv(false);
-                                }}
-                              >
-                                {seasons.map((s) => (
-                                  <option
-                                    key={s.id || s.season_number}
-                                    value={s.season_number}
-                                  >
-                                    {`S${s.season_number} (${
-                                      s.episode_count
-                                    } eps)${s.name ? ` — ${s.name}` : ""}`}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-
-                          <div className="tv-select episode">
-                            <label htmlFor="episode-select">Episode</label>
-                            <div className="select-wrap">
-                              <select
-                                id="episode-select"
-                                value={episode ?? ""}
-                                onChange={(e) => {
-                                  setEpisode(Number(e.target.value));
-                                  setPlayTv(false);
-                                }}
-                                disabled={!episodeList.length}
-                              >
-                                {episodeList.map((ep) => (
-                                  <option
-                                    key={ep.episode_number}
-                                    value={ep.episode_number}
-                                  >
-                                    {ep.label}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-
-                          <button
-                            className="tv-play-btn"
-                            onClick={() => setPlayTv(true)}
-                            disabled={!season || !episode}
-                            title={tvEmbedUrl || ""}
-                          >
-                            ▶️Play
-                          </button>
-                        </div>
-
-                        {playTv && tvEmbedUrl && (
-                          <div className="tv-player">
-                            <iframe
-                              src={tvEmbedUrl}
-                              title={`TV Player S${season}E${episode}`}
-                              allowFullScreen
-                              loading="lazy"
-                              referrerPolicy="no-referrer"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
-
+                    
+                    
                     <div className="overview">
                       <div className="heading">Overview</div>
                       <div className="description">{data.overview}</div>
                     </div>
+                    
 
                     <div className="info">
                       {data.status && (
@@ -487,6 +297,86 @@ const DetailsBanner = ({ video, crew }) => {
                   videoId={videoId}
                   setVideoId={setVideoId}
                 />
+
+                {/* TV-only controls */}
+                    {isTV && seasons.length > 0 && (
+
+                      <div className="tv-controls">
+                        <div className="tv-controls-row">
+                          <div className="tv-select">
+                            <label htmlFor="season-select">Season</label>
+                            <div className="select-wrap">
+                              <select
+                                id="season-select"
+                                value={season ?? ""}
+                                onChange={(e) => {
+                                  setSeason(Number(e.target.value));
+                                  setEpisode(1);
+                                  setPlayTv(false);
+                                }}
+                              >
+                                {seasons.map((s) => (
+                                  <option
+                                    key={s.id || s.season_number}
+                                    value={s.season_number}
+                                  >
+                                    {`S${s.season_number} (${
+                                      s.episode_count
+                                    } eps)${s.name ? ` — ${s.name}` : ""}`}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <div className="tv-select episode">
+                            <label htmlFor="episode-select">Episode</label>
+                            <div className="select-wrap">
+                              <select
+                                id="episode-select"
+                                value={episode ?? ""}
+                                onChange={(e) => {
+                                  setEpisode(Number(e.target.value));
+                                  setPlayTv(false);
+                                }}
+                                disabled={!episodeList.length}
+                              >
+                                {episodeList.map((ep) => (
+                                  <option
+                                    key={ep.episode_number}
+                                    value={ep.episode_number}
+                                  >
+                                    {ep.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <button
+                            className="tv-play-btn"
+                            onClick={() => setPlayTv(true)}
+                            disabled={!season || !episode}
+                            title={tvEmbedUrl || ""}
+                          >
+                            ▶️Play
+                          </button>
+                        </div>
+
+                        {playTv && tvEmbedUrl && (
+                          <div className="tv-player">
+                            <iframe
+                              src={tvEmbedUrl}
+                              title={`TV Player S${season}E${episode}`}
+                              allowFullScreen
+                              loading="lazy"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+
               </ContentWrapper>
             </>
           )}
