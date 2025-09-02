@@ -1,271 +1,419 @@
 @import "../../../mixins.scss";
 .detailsBanner {
+  width: 100%;
+  background-color: var(--black);
+  padding-top: 100px;
+  margin-bottom: 50px;
+  @include md {
+    margin-bottom: 0;
+    padding-top: 120px;
+    min-height: 700px;
+  }
+  .backdrop-img {
     width: 100%;
-    background-color: var(--black);
-    padding-top: 100px;
-    margin-bottom: 50px;
-    @include md {
-        margin-bottom: 0;
-        padding-top: 120px;
-        min-height: 700px;
-    }
-    .backdrop-img {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.1;
+    overflow: hidden;
+    .lazy-load-image-background {
+      width: 100%;
+      height: 100%;
+      img {
         width: 100%;
         height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0.1;
-        overflow: hidden;
-        .lazy-load-image-background {
-            width: 100%;
-            height: 100%;
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                object-position: center;
-            }
-        }
+        object-fit: cover;
+        object-position: center;
+      }
     }
-    .opacity-layer {
+  }
+  .opacity-layer {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(180deg, rgba(4, 21, 45, 0) 0%, #04152d 79.17%);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+  }
+
+  .content {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 25px;
+    @include md {
+      gap: 50px;
+      flex-direction: row;
+    }
+    .left {
+      flex-shrink: 0;
+      .posterImg {
+        margin-top: 10px;
         width: 100%;
-        height: 250px;
-        background: linear-gradient(
-            180deg,
-            rgba(4, 21, 45, 0) 0%,
-            #04152d 79.17%
-        );
-        position: absolute;
-        bottom: 0;
-        left: 0;
-    }
-
-    .content {
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        gap: 25px;
+        display: block;
+        border-radius: 12px;
         @include md {
-            gap: 50px;
-            flex-direction: row;
+          max-width: 350px;
         }
-        .left {
-            flex-shrink: 0;
-            .posterImg {
-                margin-top: 10px;
+      }
+    }
+    .right {
+      color: white;
+      position: relative; /* create stacking context for z-index */
+
+      .title {
+        font-size: 28px;
+        line-height: 40px;
+        @include md {
+          font-size: 34px;
+          line-height: 44px;
+        }
+      }
+      .subtitle {
+        font-size: 16px;
+        line-height: 24px;
+        margin-bottom: 15px;
+        font-style: italic;
+        opacity: 0.5;
+        @include md {
+          font-size: 20px;
+          line-height: 28px;
+        }
+      }
+      .genres {
+        margin-bottom: 25px;
+        flex-flow: row wrap;
+      }
+      .overview {
+        margin-bottom: 25px;
+        .heading {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+        .description {
+          line-height: 24px;
+          @include md {
+            padding-right: 100px;
+          }
+        }
+      }
+      .circleRating {
+        max-width: 50px;
+        margin-right: 20px;
+        padding-right: 5px;
+        @include md {
+          max-width: 90px;
+        }
+        .CircularProgressbar-text {
+          fill: white;
+        }
+      }
+      .playbtn {
+        width: 140px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        svg {
+          width: 40px;
+          @include md {
+            width: 80px;
+          }
+        }
+        .text {
+          font-size: 14px;
+          transition: all 0.4s ease-in-out;
+          @include md {
+            font-size: 20px;
+          }
+        }
+        .triangle {
+          stroke-dasharray: 240;
+          stroke-dashoffset: 480;
+          stroke: white;
+          transform: translateY(0);
+          transition: all 0.7s ease-in-out;
+        }
+        .circle {
+          stroke: white;
+          stroke-dasharray: 650;
+          stroke-dashoffset: 1300;
+          transition: all 0.4s ease-in-out;
+        }
+        &:hover {
+          .text {
+            color: var(--blue);
+          }
+          .triangle {
+            stroke-dashoffset: 0;
+            opacity: 1;
+            stroke: var(--blue);
+            animation: trailorPlay 0.7s ease-in-out;
+          }
+          .circle {
+            stroke-dashoffset: 0;
+            stroke: var(--blue);
+          }
+        }
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+
+        .watchMovie a {
+          font-size: 14px;
+          text-decoration: none;
+          color: white;
+          transition: all 0.4s ease-in-out;
+          @include md {
+            font-size: 20px;
+          }
+        }
+        .watchMovie a:hover {
+          cursor: pointer;
+          color: var(--blue);
+        }
+        .btn {
+          font-size: 14px;
+          background: var(--gradient);
+          border-radius: 5px;
+          padding: 6px 10px;
+          color: var(--black);
+          text-align: center;
+          font-weight: 600;
+          transition: all 0.4s ease-in-out;
+          @include md {
+            font-size: 18px;
+          }
+        }
+        .btn:hover {
+          border-radius: 18px;
+          color: black;
+          cursor: pointer;
+        }
+      }
+
+//////////////////////////////////      /* ---------- TV-only controls (clean compact) ---------- */
+    //   .detailsBanner {
+        // .right {
+          .tv-controls {
+            margin-top: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 3;
+
+            /* 12-col grid: Season(3) Episode(5) Play(2) with gaps */
+            .tv-controls-row {
+              display: grid;
+              grid-template-columns: repeat(12, 1fr);
+              gap: 12px;
+              align-items: end;
+
+              @include md {
+                gap: 16px;
+              }
+            }
+
+            .tv-select {
+              grid-column: span 12;
+
+              @include md {
+                grid-column: span 3; /* Season default */
+              }
+
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+
+              label {
+                margin-left: 5px;
+                font-size: 18px;
+                font-weight: 700;
+                color: rgba(255, 255, 255, 0.8);
+              }
+
+              .select-wrap {
+                position: relative;
                 width: 100%;
-                display: block;
-                border-radius: 12px;
-                @include md {
-                    max-width: 350px;
-                }
-            }
-        }
-        .right {
-            color: white;
-            .title {
-                font-size: 28px;
-                line-height: 40px;
-                @include md {
-                    font-size: 34px;
-                    line-height: 44px;
-                }
-            }
-            .subtitle {
-                font-size: 16px;
-                line-height: 24px;
-                margin-bottom: 15px;
-                font-style: italic;
-                opacity: 0.5;
-                @include md {
-                    font-size: 20px;
-                    line-height: 28px;
-                }
-            }
-            .genres {
-                margin-bottom: 25px;
-                flex-flow: row wrap;
-            }
-            .overview {
-                margin-bottom: 25px;
-                .heading {
-                    font-size: 24px;
-                    margin-bottom: 10px;
-                }
-                .description {
-                    line-height: 24px;
-                    @include md {
-                        padding-right: 100px;
-                    }
-                }
-            }
-            .circleRating {
-                max-width: 50px;
-                // background-color: var(--black2);
-                margin-right: 20px;
-                padding-right: 5px;
-                @include md {
-                    max-width: 90px;
-                }
-                .CircularProgressbar-text {
-                    fill: white;
-                }
-            }
-            .playbtn {
-                width: 140px;
-                // border: 2px solid white;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                cursor: pointer;
-                svg {
-                    width: 40px;
-                    @include md {
-                        width: 80px;
-                    }
-                }
-                .text {
-                    font-size: 14px;
-                    transition: all 0.4s ease-in-out;
-                    @include md {
-                        font-size: 20px;
-                    }
-                }
-                .triangle {
-                    stroke-dasharray: 240;
-                    stroke-dashoffset: 480;
-                    stroke: white;
-                    transform: translateY(0);
-                    transition: all 0.7s ease-in-out;
-                }
-                .circle {
-                    stroke: white;
-                    stroke-dasharray: 650;
-                    stroke-dashoffset: 1300;
-                    transition: all 0.4s ease-in-out;
-                }
+              }
+
+              select {
+                width: 100%;
+                height: 44px;
+                padding: 0 40px 0 12px; /* room for chevron */
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                background-color: #132235; /* dark, no blur */
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 14px;
+                font-weight: 600;
+                outline: none;
+                appearance: none;
+                -webkit-appearance: none;
+                transition: border-color 0.15s ease, box-shadow 0.15s ease,
+                  background-color 0.15s ease;
+
                 &:hover {
-                    .text {
-                        color: var(--blue);
-                    }
-                    .triangle {
-                        stroke-dashoffset: 0;
-                        opacity: 1;
-                        stroke: var(--blue);
-                        animation: trailorPlay 0.7s ease-in-out;
-                    }
-                    .circle {
-                        stroke-dashoffset: 0;
-                        stroke: var(--blue);
-                    }
+                  border-color: rgba(255, 255, 255, 0.28);
                 }
-            }
-            .row {
-                display: flex;
-                justify-content:space-between;
-                align-items: center;
-                
-                // gap: 10px;
-                margin-bottom: 25px;
-                .watchMovie a{
-                    font-size: 14px;
-                    text-decoration: none;
-                    color: white;
-                    transition: all 0.4s ease-in-out;
-                    @include md {
-                        font-size: 20px;
-                    }
+                &:focus {
+                  border-color: var(--blue);
+                  box-shadow: 0 0 0 2px rgba(0, 136, 255, 0.35);
+                  background-color: #172a42;
                 }
-                .watchMovie a:hover{
-                    cursor: pointer;
-                    color: var(--blue);
+                &:disabled {
+                  opacity: 0.6;
+                  cursor: not-allowed;
                 }
-                .btn{
-                    font-size: 14px;
-                    background: var(--gradient);
-                    border-radius: 5px;
-                    padding: 6px;
-                    color: var(--black);
-                    text-align: center;
-                    font-weight: 600;
-                    transition: all 0.4s ease-in-out;
-                    @include md {
-                        font-size: 18px;
-                    }
+
+                option {
+                  background: #0e1a2a;
+                  color: #e8f0ff;
+                  padding: 5px;
                 }
-                .btn:hover{
-                    border-radius: 18px;
-                    color: black;
-                    cursor: pointer;
-                }
+              }
+
+              /* Chevron icon */
+              .select-wrap::after {
+                content: "";
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 16px;
+                height: 16px;
+                pointer-events: none;
+                opacity: 0.9;
+                background-image: url("data:image/svg+xml;utf8,<svg width='16' height='16' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg' fill='none'><path d='M6 9l6 6 6-6' stroke='%23E8F0FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+                background-size: 16px 16px;
+                background-repeat: no-repeat;
+              }
             }
 
-            .info {
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                padding: 15px 0;
-                display: flex;
-                .infoItem {
-                    margin-right: 10px;
-                    display: flex;
-                    flex-flow: row wrap;
-                }
-                .text {
-                    margin-right: 10px;
-                    opacity: 0.5;
-                    line-height: 24px;
-                    &.bold {
-                        font-weight: 600;
-                        opacity: 1;
-                    }
-                }
+            /* Episode gets wider so long titles fit */
+            .tv-select.episode {
+              @include md {
+                grid-column: span 5;
+              }
             }
-        }
-    }
 
-    .detailsBannerSkeleton {
-        display: flex;
-        position: relative;
-        flex-direction: column;
-        gap: 25px;
-        @include md {
-            gap: 50px;
-            flex-direction: row;
-        }
-        .contentWrapper {
-            display: flex;
-            gap: 50px;
-        }
-        .left {
-            flex-shrink: 0;
-            width: 100%;
-            display: block;
-            border-radius: 12px;
-            aspect-ratio: 1/1.5; 
-            @include md {
-                max-width: 350px;
+            .tv-play-btn {
+              grid-column: span 12;
+
+              @include md {
+                grid-column: span 2;
+              }
+
+              height: 44px;
+              padding: 0 14px;
+              border-radius: 8px;
+              border: none;
+              cursor: pointer;
+              background: #0e62ab; /* cleaner blue */
+              color: #fff;
+              font-weight: 700;
+              font-size: 20px;
+              transition: transform 0.05s ease, opacity 0.2s ease,
+                background 0.2s ease;
+
+              &:hover {
+                background: #2a7dff;
+              }
+              &:active {
+                transform: translateY(1px);
+              }
+              &:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+              }
             }
-        }
-        .right {
-            width: 100%;
-            .row {
+
+            .tv-player {
+              margin-top: 18px;
+              position: relative;
+              z-index: 1;
+
+              iframe {
                 width: 100%;
-                height: 25px;
-                margin-bottom: 20px;
-                border-radius: 50px;
-                &:nth-child(2) {
-                    width: 75%;
-                    margin-bottom: 50px;
-                }
-                &:nth-child(4) {
-                    width: 50%;
-                    margin-bottom: 50px;
-                }
-                &:nth-child(7) {
-                    width: 68%;
-                    margin-bottom: 50px;
-                }
+                aspect-ratio: 16 / 9;
+                border: none;
+                border-radius: 12px;
+                background: #000;
+              }
             }
+          }
+        // }
+    //   }
+//////////////////////      /* ---------- End TV-only controls ---------- */
+
+      .info {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px 0;
+        display: flex;
+        .infoItem {
+          margin-right: 10px;
+          display: flex;
+          flex-flow: row wrap;
         }
+        .text {
+          margin-right: 10px;
+          opacity: 0.5;
+          line-height: 24px;
+          &.bold {
+            font-weight: 600;
+            opacity: 1;
+          }
+        }
+      }
     }
+  }
+
+  .detailsBannerSkeleton {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 25px;
+    @include md {
+      gap: 50px;
+      flex-direction: row;
+    }
+    .contentWrapper {
+      display: flex;
+      gap: 50px;
+    }
+    .left {
+      flex-shrink: 0;
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      aspect-ratio: 1/1.5;
+      @include md {
+        max-width: 350px;
+      }
+    }
+    .right {
+      width: 100%;
+      .row {
+        width: 100%;
+        height: 25px;
+        margin-bottom: 20px;
+        border-radius: 50px;
+        &:nth-child(2) {
+          width: 75%;
+          margin-bottom: 50px;
+        }
+        &:nth-child(4) {
+          width: 50%;
+          margin-bottom: 50px;
+        }
+        &:nth-child(7) {
+          width: 68%;
+          margin-bottom: 50px;
+        }
+      }
+    }
+  }
 }

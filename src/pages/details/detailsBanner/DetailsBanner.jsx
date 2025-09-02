@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
@@ -17,7 +17,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DetailsBanner = ({ video, crew }) => {
-  const [show, setShow] = useState();
+  const [show, setShow] = useState(false);
   const [videoId, setVideoId] = useState(null);
 
   const { mediaType, id } = useParams();
@@ -25,21 +25,15 @@ const DetailsBanner = ({ video, crew }) => {
 
   const dispatch = useDispatch();
   const { url } = useSelector((state) => state.home);
-
   const myList = useSelector((state) => state.watchList);
 
-  const _genres = data?.genres?.map((g) => g.id);
+  const _genres = data?.genres?.map((g) => g.id) || [];
 
   let currentObj = {};
   myList.forEach((e) => {
-    if (e.id === data?.id) {
-      currentObj = { ...e };
-    }
+    if (e.id === data?.id) currentObj = { ...e };
   });
-
-  const [status, setStatus] = useState(currentObj?.flag);
-  // console.log(currentObj?.flag);
-  // console.log(currentObj.hasOwnProperty("flag"))
+  const [status, setStatus] = useState(currentObj?.flag ?? false);
 
   const director = crew?.filter((f) => f.job === "Director");
   const writer = crew?.filter(
@@ -68,12 +62,81 @@ const DetailsBanner = ({ video, crew }) => {
     }
   };
 
+  // ---------------------------
+  // TV: Seasons/Episodes + Player
+  // ---------------------------
+  const isTV = mediaType === "tv";
+
+  // Filter out specials (season 0) and empty seasons
+  const seasons = useMemo(() => {
+    return (data?.seasons || [])
+      .filter((s) => s?.season_number > 0 && (s?.episode_count ?? 0) > 0)
+      .sort((a, b) => a.season_number - b.season_number);
+  }, [data?.seasons]);
+
+  const [season, setSeason] = useState(null);
+  const [episode, setEpisode] = useState(null);
+  const [playTv, setPlayTv] = useState(false);
+
+  // Initialize season/episode defaults on load
+  useEffect(() => {
+    if (isTV && seasons.length) {
+      setSeason(seasons[0].season_number);
+      setEpisode(1);
+      setPlayTv(false);
+    }
+  }, [isTV, data?.id, seasons]);
+
+  // Fetch real episodes for the selected season (TMDB: /tv/{id}/season/{season_number})
+  // If your useFetch requires a string, pass a valid path; if it can handle null, you can gate it.
+  const seasonPath = isTV && season ? `/tv/${id}/season/${season}` : null;
+  const { data: seasonData } = useFetch(seasonPath || "/noop"); // "/noop" so the hook still returns something
+
+  // Prefer detailed episode list from API; fallback to numbers if not available
+  const episodeList = useMemo(() => {
+    if (seasonData?.episodes?.length) {
+      return seasonData.episodes.map((ep) => ({
+        episode_number: ep.episode_number,
+        label:
+          ep.episode_number && ep.name
+            ? `E${ep.episode_number} — ${ep.name}`
+            : `E${ep.episode_number || ""}`.trim(),
+      }));
+    }
+    const fallbackCount =
+      seasons.find((s) => s.season_number === Number(season))?.episode_count ||
+      0;
+    return Array.from({ length: fallbackCount }, (_, i) => ({
+      episode_number: i + 1,
+      label: `E${i + 1}`,
+    }));
+  }, [seasonData?.episodes, seasons, season]);
+
+  // Ensure selected episode stays in range when season changes
+  useEffect(() => {
+    if (!episodeList.length) return;
+    if (!episode || episode > episodeList.length) {
+      setEpisode(episodeList[0].episode_number);
+    }
+  }, [episodeList, episode]);
+
+  const tvEmbedUrl =
+    isTV && season && episode
+      ? `https://vidlink.pro/tv/${data?.id}/${season}/${episode}`
+      : null;
+
+  const externalWatchUrl = isTV
+    ? `https://vidlink.pro/tv/${data?.id}/${
+        season || seasons[0]?.season_number || 1
+      }/${episode || 1}`
+    : `https://vidlink.pro/${mediaType}/${data?.id}`;
+
   return (
     <div className="detailsBanner">
       {!loading ? (
         <>
           {data && (
-            <React.Fragment>
+            <>
               <div className="backdrop-img">
                 <Img src={url.backdrop + data.backdrop_path} />
               </div>
@@ -90,21 +153,27 @@ const DetailsBanner = ({ video, crew }) => {
                       <Img className="posterImg" src={PosterFallback} />
                     )}
                   </div>
+
                   <div className="right">
                     <div className="title">
                       {`${data.name || data.title} (${dayjs(
-                        data?.release_date
+                        data?.release_date || data?.first_air_date
                       ).format("MMM D, YYYY")})`}
                     </div>
+
                     <div className="subtitle">{data.tagline}</div>
                     <Genres data={_genres} />
+
                     <div className="row">
-                      <CircleRating rating={data.vote_average.toFixed(1)} />
+                      <CircleRating
+                        rating={(data?.vote_average ?? 0).toFixed(1)}
+                      />
+
                       <div
                         className="playbtn"
                         onClick={() => {
                           setShow(true);
-                          setVideoId(video.key);
+                          if (video?.key) setVideoId(video.key);
                         }}
                       >
                         <Playbtn />
@@ -114,25 +183,21 @@ const DetailsBanner = ({ video, crew }) => {
                       <div className="watchMovie">
                         <a
                           target="_blank"
-                          href={
-                            "https://vidsrc.in/embed/" +
-                            mediaType +
-                            "/" +
-                            data.id
-                          }
+                          rel="noopener noreferrer"
+                          href={externalWatchUrl}
                         >
-                          {mediaType === "tv" ? (
-                            <span>Watch Show</span>
+                          {isTV ? (
+                            <span>Open External Link</span>
                           ) : (
                             <span>Watch Movie</span>
                           )}
                         </a>
                       </div>
 
-                      {/* <Heart isClick={isClick}     /> */}
                       <div className="btn" onClick={handleFav}>
                         Watch List
                       </div>
+
                       <ToastContainer
                         position="top-right"
                         autoClose={2000}
@@ -146,10 +211,205 @@ const DetailsBanner = ({ video, crew }) => {
                         theme="dark"
                       />
                     </div>
+
+                    {/* TV-only controls */}
+                    {isTV && seasons.length > 0 && (
+                      // <div className="tv-controls">
+                      //   <div className="tv-controls-row">
+                      //     {/* <div className="tv-select">
+                      //       <label htmlFor="season-select">Season</label>
+                      //       <select
+                      //         id="season-select"
+                      //         value={season ?? ""}
+                      //         onChange={(e) => {
+                      //           setSeason(Number(e.target.value));
+                      //           setEpisode(1);
+                      //           setPlayTv(false);
+                      //         }}
+                      //       >
+                      //         {seasons.map((s) => (
+                      //           <option key={s.id || s.season_number} value={s.season_number}>
+                      //             {`S${s.season_number} (${s.episode_count} eps)${
+                      //               s.name ? ` — ${s.name}` : ""
+                      //             }`}
+                      //           </option>
+                      //         ))}
+                      //       </select>
+                      //     </div>
+
+                      //     <div className="tv-select">
+                      //       <label htmlFor="episode-select">Episode</label>
+                      //       <select
+                      //         id="episode-select"
+                      //         value={episode ?? ""}
+                      //         onChange={(e) => {
+                      //           setEpisode(Number(e.target.value));
+                      //           setPlayTv(false);
+                      //         }}
+                      //         disabled={!episodeList.length}
+                      //       >
+                      //         {episodeList.map((ep) => (
+                      //           <option key={ep.episode_number} value={ep.episode_number}>
+                      //             {ep.label}
+                      //           </option>
+                      //         ))}
+                      //       </select>
+                      //     </div> */}
+
+                      //     <div className="tv-select">
+                      //       <label htmlFor="season-select">Season</label>
+                      //       <div className="select-wrap">
+                      //         <select
+                      //           id="season-select"
+                      //           value={season ?? ""}
+                      //           onChange={(e) => {
+                      //             setSeason(Number(e.target.value));
+                      //             setEpisode(1);
+                      //             setPlayTv(false);
+                      //           }}
+                      //         >
+                      //           {seasons.map((s) => (
+                      //             <option
+                      //               key={s.id || s.season_number}
+                      //               value={s.season_number}
+                      //             >
+                      //               {`S${s.season_number} (${
+                      //                 s.episode_count
+                      //               } eps)${s.name ? ` — ${s.name}` : ""}`}
+                      //             </option>
+                      //           ))}
+                      //         </select>
+                      //       </div>
+                      //     </div>
+
+                      //     <div className="tv-select">
+                      //       <label htmlFor="episode-select">Episode</label>
+                      //       <div className="select-wrap">
+                      //         <select
+                      //           id="episode-select"
+                      //           value={episode ?? ""}
+                      //           onChange={(e) => {
+                      //             setEpisode(Number(e.target.value));
+                      //             setPlayTv(false);
+                      //           }}
+                      //           disabled={!episodeList.length}
+                      //         >
+                      //           {episodeList.map((ep) => (
+                      //             <option
+                      //               key={ep.episode_number}
+                      //               value={ep.episode_number}
+                      //             >
+                      //               {ep.label}
+                      //             </option>
+                      //           ))}
+                      //         </select>
+                      //       </div>
+                      //     </div>
+
+                      //     <button
+                      //       className="tv-play-btn"
+                      //       onClick={() => setPlayTv(true)}
+                      //       disabled={!season || !episode}
+                      //       title={tvEmbedUrl || ""}
+                      //     >
+                      //       Play Episode
+                      //     </button>
+                      //   </div>
+
+                      //   {playTv && tvEmbedUrl && (
+                      //     <div className="tv-player">
+                      //       <iframe
+                      //         src={tvEmbedUrl}
+                      //         title={`TV Player S${season}E${episode}`}
+                      //         allowFullScreen
+                      //         loading="lazy"
+                      //         referrerPolicy="no-referrer"
+                      //       />
+                      //     </div>
+                      //   )}
+                      // </div>
+
+                      <div className="tv-controls">
+                        <div className="tv-controls-row">
+                          <div className="tv-select">
+                            <label htmlFor="season-select">Season</label>
+                            <div className="select-wrap">
+                              <select
+                                id="season-select"
+                                value={season ?? ""}
+                                onChange={(e) => {
+                                  setSeason(Number(e.target.value));
+                                  setEpisode(1);
+                                  setPlayTv(false);
+                                }}
+                              >
+                                {seasons.map((s) => (
+                                  <option
+                                    key={s.id || s.season_number}
+                                    value={s.season_number}
+                                  >
+                                    {`S${s.season_number} (${
+                                      s.episode_count
+                                    } eps)${s.name ? ` — ${s.name}` : ""}`}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <div className="tv-select episode">
+                            <label htmlFor="episode-select">Episode</label>
+                            <div className="select-wrap">
+                              <select
+                                id="episode-select"
+                                value={episode ?? ""}
+                                onChange={(e) => {
+                                  setEpisode(Number(e.target.value));
+                                  setPlayTv(false);
+                                }}
+                                disabled={!episodeList.length}
+                              >
+                                {episodeList.map((ep) => (
+                                  <option
+                                    key={ep.episode_number}
+                                    value={ep.episode_number}
+                                  >
+                                    {ep.label}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+
+                          <button
+                            className="tv-play-btn"
+                            onClick={() => setPlayTv(true)}
+                            disabled={!season || !episode}
+                            title={tvEmbedUrl || ""}
+                          >
+                            ▶️Play
+                          </button>
+                        </div>
+
+                        {playTv && tvEmbedUrl && (
+                          <div className="tv-player">
+                            <iframe
+                              src={tvEmbedUrl}
+                              title={`TV Player S${season}E${episode}`}
+                              allowFullScreen
+                              loading="lazy"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     <div className="overview">
                       <div className="heading">Overview</div>
                       <div className="description">{data.overview}</div>
                     </div>
+
                     <div className="info">
                       {data.status && (
                         <div className="infoItem">
@@ -157,11 +417,13 @@ const DetailsBanner = ({ video, crew }) => {
                           <span className="text">{data.status}</span>
                         </div>
                       )}
-                      {data.release_date && (
+                      {(data.release_date || data.first_air_date) && (
                         <div className="infoItem">
                           <span className="text bold">Release Date: </span>
                           <span className="text">
-                            {dayjs(data?.release_date).format("MMM D, YYYY")}
+                            {dayjs(
+                              data?.release_date || data?.first_air_date
+                            ).format("MMM D, YYYY")}
                           </span>
                         </div>
                       )}
@@ -174,6 +436,7 @@ const DetailsBanner = ({ video, crew }) => {
                         </div>
                       )}
                     </div>
+
                     {director?.length > 0 && (
                       <div className="info">
                         <span className="text bold">Director: </span>
@@ -187,6 +450,7 @@ const DetailsBanner = ({ video, crew }) => {
                         </span>
                       </div>
                     )}
+
                     {writer?.length > 0 && (
                       <div className="info">
                         <span className="text bold">Writer: </span>
@@ -200,9 +464,10 @@ const DetailsBanner = ({ video, crew }) => {
                         </span>
                       </div>
                     )}
+
                     {data?.created_by?.length > 0 && (
                       <div className="info">
-                        <span className="text bold">Creater: </span>
+                        <span className="text bold">Creator: </span>
                         <span className="text">
                           {data?.created_by.map((d, i) => (
                             <span key={i}>
@@ -215,6 +480,7 @@ const DetailsBanner = ({ video, crew }) => {
                     )}
                   </div>
                 </div>
+
                 <VideoPopup
                   show={show}
                   setShow={setShow}
@@ -222,7 +488,7 @@ const DetailsBanner = ({ video, crew }) => {
                   setVideoId={setVideoId}
                 />
               </ContentWrapper>
-            </React.Fragment>
+            </>
           )}
         </>
       ) : (
