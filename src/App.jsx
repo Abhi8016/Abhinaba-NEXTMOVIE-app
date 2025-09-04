@@ -8,6 +8,7 @@ import { getApiConfiguration, getGenres } from "./store/homeSlice";
 
 import Header from "./components/header/Header";
 import Home from "./pages/home/Home";
+import { HashRouter } from "react-router-dom";
 
 // import Footer from "./components/footer/Footer";
 import Details from "./pages/details/Details";
@@ -72,7 +73,7 @@ function App() {
   };
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -83,7 +84,7 @@ function App() {
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
